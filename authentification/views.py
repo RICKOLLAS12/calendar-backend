@@ -1,3 +1,4 @@
+import logging
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -8,6 +9,9 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
 from calendar_management.throttling import LoginThrottle, RegisterThrottle
+
+# Get logger for this module
+logger = logging.getLogger(__name__)
 
 class RegisterSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=150)
@@ -42,6 +46,7 @@ class LoginAPIView(APIView):
             user = authenticate(username=username, password=password)
             if user is not None:
                 refresh = RefreshToken.for_user(user)
+                logger.info(f"User {username} logged in successfully")
                 return Response({
                     'user': {
                         'id': user.id,
@@ -54,6 +59,7 @@ class LoginAPIView(APIView):
                     }
                 })
             else:
+                logger.warning(f"Failed login attempt for username: {username}")
                 return Response({'error': _('Identifiants invalides')}, status=status.HTTP_401_UNAUTHORIZED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
@@ -80,6 +86,8 @@ class RegisterAPIView(APIView):
                 user = User.objects.create_user(username=username, email=email, password=password)
                 refresh = RefreshToken.for_user(user)
 
+                logger.info(f"New user registered: {username} (ID: {user.id})")
+
                 return Response({
                     'user': {
                         'id': user.id,
@@ -92,6 +100,7 @@ class RegisterAPIView(APIView):
                     }
                 }, status=status.HTTP_201_CREATED)
             except Exception as e:
+                logger.error(f"Registration failed for {username}: {str(e)}")
                 return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
