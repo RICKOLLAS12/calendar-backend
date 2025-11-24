@@ -7,7 +7,18 @@ from django.db.models import Q
 from django.utils.translation import gettext_lazy as _
 from .models import CollaborationRequest, Collaboration
 from .serializers import CollaborationRequestSerializer, CollaborationSerializer, SendCollaborationRequestSerializer
+from drf_spectacular.utils import extend_schema
 
+@extend_schema(
+    summary="Send collaboration request",
+    description="Send a collaboration request to another user",
+    request=SendCollaborationRequestSerializer,
+    responses={
+        201: {"description": "Request sent successfully"},
+        400: {"description": "Bad request"},
+        404: {"description": "User not found"}
+    }
+)
 class SendCollaborationRequestAPIView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = SendCollaborationRequestSerializer
@@ -48,6 +59,25 @@ class SendCollaborationRequestAPIView(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@extend_schema(
+    summary="List collaboration requests",
+    description="Get list of received and sent collaboration requests",
+    responses={
+        200: {
+            "type": "object",
+            "properties": {
+                "received": {
+                    "type": "array",
+                    "items": CollaborationRequestSerializer().data
+                },
+                "sent": {
+                    "type": "array",
+                    "items": CollaborationRequestSerializer().data
+                }
+            }
+        }
+    }
+)
 class CollaborationRequestListAPIView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = CollaborationRequestSerializer
@@ -66,6 +96,14 @@ class CollaborationRequestListAPIView(APIView):
             'sent': CollaborationRequestSerializer(sent_requests, many=True).data
         })
 
+@extend_schema(
+    summary="Accept collaboration request",
+    description="Accept a pending collaboration request",
+    responses={
+        200: {"description": "Request accepted successfully"},
+        404: {"description": "Request not found"}
+    }
+)
 class AcceptCollaborationRequestAPIView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = None  # No input serializer needed for POST with no body
@@ -82,6 +120,14 @@ class AcceptCollaborationRequestAPIView(APIView):
         except CollaborationRequest.DoesNotExist:
             return Response({'error': 'Demande introuvable.'}, status=status.HTTP_404_NOT_FOUND)
 
+@extend_schema(
+    summary="Reject collaboration request",
+    description="Reject a pending collaboration request",
+    responses={
+        200: {"description": "Request rejected successfully"},
+        404: {"description": "Request not found"}
+    }
+)
 class RejectCollaborationRequestAPIView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = None
@@ -98,6 +144,11 @@ class RejectCollaborationRequestAPIView(APIView):
         except CollaborationRequest.DoesNotExist:
             return Response({'error': 'Demande introuvable.'}, status=status.HTTP_404_NOT_FOUND)
 
+@extend_schema(
+    summary="List collaborators",
+    description="Get list of user's collaborators",
+    responses={200: CollaborationSerializer(many=True)}
+)
 class CollaboratorListAPIView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = CollaborationSerializer
@@ -106,6 +157,14 @@ class CollaboratorListAPIView(APIView):
         collaborations = Collaboration.objects.filter(user=request.user)
         return Response(CollaborationSerializer(collaborations, many=True).data)
 
+@extend_schema(
+    summary="Remove collaborator",
+    description="Remove a collaborator relationship",
+    responses={
+        200: {"description": "Collaborator removed successfully"},
+        404: {"description": "Collaboration not found"}
+    }
+)
 class RemoveCollaboratorAPIView(APIView):
     permission_classes = [IsAuthenticated]
     serializer_class = None

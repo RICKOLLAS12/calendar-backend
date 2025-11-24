@@ -5,7 +5,43 @@ from rest_framework.response import Response
 from django.contrib.auth.models import User
 from .models import UserProfile
 from .serializers import UserSerializer, UserProfileSerializer, UserCreateSerializer
+from drf_spectacular.utils import extend_schema, extend_schema_view
 
+@extend_schema_view(
+    list=extend_schema(
+        summary="List all users",
+        description="Retrieve a list of all users (admin only)",
+        responses={200: UserSerializer(many=True)}
+    ),
+    retrieve=extend_schema(
+        summary="Get user details",
+        description="Retrieve detailed information about a specific user",
+        responses={200: UserSerializer}
+    ),
+    create=extend_schema(
+        summary="Create new user",
+        description="Create a new user account (admin only)",
+        request=UserCreateSerializer,
+        responses={201: UserSerializer}
+    ),
+    update=extend_schema(
+        summary="Update user",
+        description="Update an existing user account",
+        request=UserCreateSerializer,
+        responses={200: UserSerializer}
+    ),
+    partial_update=extend_schema(
+        summary="Partially update user",
+        description="Partially update an existing user account",
+        request=UserCreateSerializer,
+        responses={200: UserSerializer}
+    ),
+    destroy=extend_schema(
+        summary="Delete user",
+        description="Delete an existing user account",
+        responses={204: None}
+    )
+)
 class UserViewSet(viewsets.ModelViewSet):
     """
     ViewSet pour la gestion des utilisateurs (réservé aux admins)

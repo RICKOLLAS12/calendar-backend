@@ -1,6 +1,7 @@
 from rest_framework import serializers
 from django.contrib.auth.models import User
 from .models import UserProfile
+from drf_spectacular.utils import extend_schema_field
 
 class UserProfileSerializer(serializers.ModelSerializer):
     class Meta:
@@ -19,6 +20,7 @@ class UserSerializer(serializers.ModelSerializer):
             'date_joined', 'last_login', 'profile'
         ]
 
+    @extend_schema_field(str)
     def get_full_name(self, obj):
         return obj.get_full_name()
 
