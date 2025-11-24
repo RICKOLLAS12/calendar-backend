@@ -9,6 +9,7 @@ from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
 from calendar_management.throttling import LoginThrottle, RegisterThrottle
+from drf_spectacular.utils import extend_schema
 
 # Get logger for this module
 logger = logging.getLogger(__name__)
@@ -32,6 +33,34 @@ class ChangePasswordSerializer(serializers.Serializer):
             raise serializers.ValidationError(_("Les nouveaux mots de passe ne correspondent pas."))
         return data
 
+@extend_schema(
+    summary="User login",
+    description="Authenticate user and return JWT tokens",
+    request=LoginSerializer,
+    responses={
+        200: {
+            "type": "object",
+            "properties": {
+                "user": {
+                    "type": "object",
+                    "properties": {
+                        "id": {"type": "integer"},
+                        "username": {"type": "string"},
+                        "email": {"type": "string"}
+                    }
+                },
+                "tokens": {
+                    "type": "object",
+                    "properties": {
+                        "refresh": {"type": "string"},
+                        "access": {"type": "string"}
+                    }
+                }
+            }
+        },
+        401: {"description": "Invalid credentials"}
+    }
+)
 class LoginAPIView(APIView):
     permission_classes = [AllowAny]
     serializer_class = LoginSerializer
@@ -64,6 +93,34 @@ class LoginAPIView(APIView):
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
+@extend_schema(
+    summary="User registration",
+    description="Create a new user account",
+    request=RegisterSerializer,
+    responses={
+        201: {
+            "type": "object",
+            "properties": {
+                "user": {
+                    "type": "object",
+                    "properties": {
+                        "id": {"type": "integer"},
+                        "username": {"type": "string"},
+                        "email": {"type": "string"}
+                    }
+                },
+                "tokens": {
+                    "type": "object",
+                    "properties": {
+                        "refresh": {"type": "string"},
+                        "access": {"type": "string"}
+                    }
+                }
+            }
+        },
+        400: {"description": "Validation errors"}
+    }
+)
 class RegisterAPIView(APIView):
     permission_classes = [AllowAny]
     serializer_class = RegisterSerializer
