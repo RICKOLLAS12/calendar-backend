@@ -7,6 +7,12 @@ from django.contrib.auth import authenticate, update_session_auth_hash
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import serializers
 from django.utils.translation import gettext_lazy as _
+from calendar_management.throttling import LoginThrottle, RegisterThrottle
+
+class RegisterSerializer(serializers.Serializer):
+    username = serializers.CharField(max_length=150)
+    email = serializers.EmailField()
+    password = serializers.CharField(min_length=8, write_only=True)
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=150)
@@ -25,6 +31,7 @@ class ChangePasswordSerializer(serializers.Serializer):
 class LoginAPIView(APIView):
     permission_classes = [AllowAny]
     serializer_class = LoginSerializer
+    throttle_classes = [LoginThrottle]
 
     def post(self, request):
         serializer = LoginSerializer(data=request.data)
@@ -48,6 +55,44 @@ class LoginAPIView(APIView):
                 })
             else:
                 return Response({'error': _('Identifiants invalides')}, status=status.HTTP_401_UNAUTHORIZED)
+
+        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+class RegisterAPIView(APIView):
+    permission_classes = [AllowAny]
+    serializer_class = RegisterSerializer
+    throttle_classes = [RegisterThrottle]
+
+    def post(self, request):
+        serializer = RegisterSerializer(data=request.data)
+        if serializer.is_valid():
+            username = serializer.validated_data['username']
+            email = serializer.validated_data['email']
+            password = serializer.validated_data['password']
+
+            if User.objects.filter(username=username).exists():
+                return Response({'error': _('Nom d\'utilisateur déjà pris')}, status=status.HTTP_400_BAD_REQUEST)
+
+            if User.objects.filter(email=email).exists():
+                return Response({'error': _('Email déjà utilisé')}, status=status.HTTP_400_BAD_REQUEST)
+
+            try:
+                user = User.objects.create_user(username=username, email=email, password=password)
+                refresh = RefreshToken.for_user(user)
+
+                return Response({
+                    'user': {
+                        'id': user.id,
+                        'username': user.username,
+                        'email': user.email
+                    },
+                    'tokens': {
+                        'refresh': str(refresh),
+                        'access': str(refresh.access_token),
+                    }
+                }, status=status.HTTP_201_CREATED)
+            except Exception as e:
+                return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
