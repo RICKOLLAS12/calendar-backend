@@ -38,6 +38,9 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # CORS
+    'corsheaders',
+
     # REST Framework
     'rest_framework',
     'rest_framework_simplejwt',
@@ -136,8 +139,9 @@ LOCALE_PATHS = [
 # Middleware for language detection
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'corsheaders.middleware.CorsMiddleware',  # CORS middleware (must be early)
     'django.contrib.sessions.middleware.SessionMiddleware',
-    'django.middleware.locale.LocaleMiddleware',  # Add this for language detection
+    'django.middleware.locale.LocaleMiddleware',  # Language detection
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
@@ -196,3 +200,43 @@ SPECTACULAR_SETTINGS = {
     'VERSION': '1.0.0',
     'SERVE_INCLUDE_SCHEMA': False,
 }
+
+# CORS configuration
+CORS_ALLOWED_ORIGINS = [
+    "http://localhost:3000",  # React development server
+    "http://127.0.0.1:3000",  # Alternative React dev server
+    "http://localhost:8080",  # Vue.js development server
+    "http://127.0.0.1:8080",  # Alternative Vue dev server
+    "http://localhost:4200",  # Angular development server
+    "http://127.0.0.1:4200",  # Alternative Angular dev server
+]
+
+# Allow credentials (cookies, authorization headers)
+CORS_ALLOW_CREDENTIALS = True
+
+# Allowed headers
+CORS_ALLOW_HEADERS = [
+    'accept',
+    'accept-encoding',
+    'authorization',
+    'content-type',
+    'dnt',
+    'origin',
+    'user-agent',
+    'x-csrftoken',
+    'x-requested-with',
+    'x-language',  # Custom header for language
+]
+
+# Allowed methods
+CORS_ALLOW_METHODS = [
+    'DELETE',
+    'GET',
+    'OPTIONS',
+    'PATCH',
+    'POST',
+    'PUT',
+]
+
+# Allow all origins in development (be careful in production!)
+# CORS_ALLOW_ALL_ORIGINS = True  # Uncomment for development only
