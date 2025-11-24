@@ -4,6 +4,7 @@ from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from django.contrib.auth.models import User
 from django.db.models import Q
+from django.utils.translation import gettext_lazy as _
 from .models import CollaborationRequest, Collaboration
 from .serializers import CollaborationRequestSerializer, CollaborationSerializer, SendCollaborationRequestSerializer
 
@@ -19,11 +20,11 @@ class SendCollaborationRequestAPIView(APIView):
                 receiver = User.objects.get(username=receiver_username)
 
                 if receiver == request.user:
-                    return Response({'error': 'Vous ne pouvez pas vous ajouter vous-même.'}, status=status.HTTP_400_BAD_REQUEST)
+                    return Response({'error': _('Vous ne pouvez pas vous ajouter vous-même.')}, status=status.HTTP_400_BAD_REQUEST)
 
                 # Vérifier si déjà collaborateurs
                 if Collaboration.objects.filter(user=request.user, collaborator=receiver).exists():
-                    return Response({'message': 'Vous êtes déjà collaborateurs.'}, status=status.HTTP_200_OK)
+                    return Response({'message': _('Vous êtes déjà collaborateurs.')}, status=status.HTTP_200_OK)
 
                 # Vérifier si demande existe déjà
                 existing = CollaborationRequest.objects.filter(
@@ -33,14 +34,14 @@ class SendCollaborationRequestAPIView(APIView):
                 ).exists()
 
                 if existing:
-                    return Response({'message': 'Vous avez déjà envoyé une demande à cet utilisateur.'}, status=status.HTTP_200_OK)
+                    return Response({'message': _('Vous avez déjà envoyé une demande à cet utilisateur.')}, status=status.HTTP_200_OK)
                 else:
                     CollaborationRequest.objects.create(
                         sender=request.user,
                         receiver=receiver,
                         message=serializer.validated_data.get('message', '')
                     )
-                    return Response({'message': f'Demande envoyée à {receiver.username}.'}, status=status.HTTP_201_CREATED)
+                    return Response({'message': _('Demande envoyée à %(username)s.') % {'username': receiver.username}}, status=status.HTTP_201_CREATED)
 
             except User.DoesNotExist:
                 return Response({'error': 'Utilisateur introuvable.'}, status=status.HTTP_404_NOT_FOUND)

@@ -16,12 +16,22 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path, include
+from django.http import JsonResponse
 from rest_framework_simplejwt.views import (
     TokenObtainPairView,
     TokenRefreshView,
     TokenVerifyView,
 )
 from drf_spectacular.views import SpectacularAPIView, SpectacularRedocView, SpectacularSwaggerView
+from django.utils.translation import gettext_lazy as _
+
+def language_info(request):
+    """Return current language information"""
+    return JsonResponse({
+        'current_language': request.LANGUAGE_CODE,
+        'available_languages': dict(request.LANGUAGES),
+        'message': _('API responses are now internationalized!')
+    })
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -41,4 +51,8 @@ urlpatterns = [
     path('api/admin/', include('user.urls')),
     path('api/events/', include('events.urls')),
     path('api/collaborations/', include('collaborations.urls')),
+
+    # Language switching
+    path('i18n/', include('django.conf.urls.i18n')),
+    path('api/language/', language_info, name='language_info'),
 ]

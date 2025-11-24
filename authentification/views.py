@@ -6,6 +6,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, update_session_auth_hash
 from rest_framework_simplejwt.tokens import RefreshToken
 from rest_framework import serializers
+from django.utils.translation import gettext_lazy as _
 
 class LoginSerializer(serializers.Serializer):
     username = serializers.CharField(max_length=150)
@@ -18,7 +19,7 @@ class ChangePasswordSerializer(serializers.Serializer):
 
     def validate(self, data):
         if data['new_password'] != data['new_password2']:
-            raise serializers.ValidationError("Les nouveaux mots de passe ne correspondent pas.")
+            raise serializers.ValidationError(_("Les nouveaux mots de passe ne correspondent pas."))
         return data
 
 class LoginAPIView(APIView):
@@ -46,7 +47,7 @@ class LoginAPIView(APIView):
                     }
                 })
             else:
-                return Response({'error': 'Identifiants invalides'}, status=status.HTTP_401_UNAUTHORIZED)
+                return Response({'error': _('Identifiants invalides')}, status=status.HTTP_401_UNAUTHORIZED)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
@@ -61,7 +62,7 @@ class ChangePasswordAPIView(APIView):
 
             # Vérifier l'ancien mot de passe
             if not user.check_password(serializer.validated_data['old_password']):
-                return Response({'error': 'Ancien mot de passe incorrect'}, status=status.HTTP_400_BAD_REQUEST)
+                return Response({'error': _('Ancien mot de passe incorrect')}, status=status.HTTP_400_BAD_REQUEST)
 
             # Changer le mot de passe
             user.set_password(serializer.validated_data['new_password'])
@@ -75,5 +76,5 @@ class ChangePasswordAPIView(APIView):
             # Mettre à jour la session pour éviter la déconnexion
             update_session_auth_hash(request, user)
 
-            return Response({'message': 'Mot de passe changé avec succès'})
+            return Response({'message': _('Mot de passe changé avec succès')})
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

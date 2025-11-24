@@ -1,0 +1,42 @@
+# French translations for calendar_management project.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
+# This file is distributed under the same license as the PACKAGE package.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PACKAGE VERSION\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2025-11-24 04:56+00:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: fr\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n > 1);\n"
+
+msgid "Les nouveaux mots de passe ne correspondent pas."
+msgstr "Les nouveaux mots de passe ne correspondent pas."
+
+msgid "Identifiants invalides"
+msgstr "Identifiants invalides"
+
+msgid "Ancien mot de passe incorrect"
+msgstr "Ancien mot de passe incorrect"
+
+msgid "Mot de passe changé avec succès"
+msgstr "Mot de passe changé avec succès"
+
+msgid "Vous ne pouvez pas vous ajouter vous-même."
+msgstr "Vous ne pouvez pas vous ajouter vous-même."
+
+msgid "Vous êtes déjà collaborateurs."
+msgstr "Vous êtes déjà collaborateurs."
+
+msgid "Vous avez déjà envoyé une demande à cet utilisateur."
+msgstr "Vous avez déjà envoyé une demande à cet utilisateur."
+
+msgid "Demande envoyée à %(username)s."
+msgstr "Demande envoyée à %(username)s."
