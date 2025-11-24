@@ -7,38 +7,38 @@
 
 Une API REST complète pour une application de calendrier avec système de collaboration, développée avec Django REST Framework.
 
-## 🌟 Fonctionnalités
+## Fonctionnalités
 
-### 📅 Gestion du Calendrier
-- ✅ Création, modification et suppression d'événements
-- ✅ Événements personnels et tâches assignées
-- ✅ Filtrage automatique par utilisateur
-- ✅ Support des couleurs et lieux personnalisés
+### Gestion du Calendrier
+- Création, modification et suppression d'événements
+- Événements personnels et tâches assignées
+- Filtrage automatique par utilisateur
+- Support des couleurs et lieux personnalisés
 
-### 🤝 Système de Collaboration
-- ✅ Envoi de demandes de collaboration
-- ✅ Acceptation/refus des demandes
-- ✅ Gestion des relations collaboratives
-- ✅ Assignation de tâches aux collaborateurs
+### Système de Collaboration
+- Envoi de demandes de collaboration
+- Acceptation/refus des demandes
+- Gestion des relations collaboratives
+- Assignation de tâches aux collaborateurs
 
-### 🔐 Authentification & Autorisation
-- ✅ Authentification JWT (JSON Web Tokens)
-- ✅ Inscription et connexion sécurisées
-- ✅ Gestion des utilisateurs (admin)
-- ✅ Changement de mot de passe
+### Authentification & Autorisation
+- Authentification JWT (JSON Web Tokens)
+- Inscription et connexion sécurisées
+- Gestion des utilisateurs (admin)
+- Changement de mot de passe
 
-### 🛡️ Sécurité
-- ✅ Rate limiting anti-abus
-- ✅ Permissions strictes par endpoint
-- ✅ Protection CSRF
-- ✅ Logging complet des actions
+### Sécurité
+- Rate limiting anti-abus
+- Permissions strictes par endpoint
+- Protection CSRF
+- Logging complet des actions
 
-### 📚 Documentation
-- ✅ Documentation Swagger/OpenAPI interactive
-- ✅ Tests possibles directement dans l'interface
-- ✅ Exemples de requêtes pour chaque endpoint
+### Documentation
+- Documentation Swagger/OpenAPI interactive
+- Tests possibles directement dans l'interface
+- Exemples de requêtes pour chaque endpoint
 
-## 🛠️ Technologies Utilisées
+## Technologies Utilisées
 
 - **Backend** : Django 5.2.8
 - **API** : Django REST Framework 3.16.1
@@ -47,7 +47,7 @@ Une API REST complète pour une application de calendrier avec système de colla
 - **Base de données** : SQLite (développement) / PostgreSQL (production)
 - **Internationalisation** : Support français/anglais
 
-## 🚀 Installation & Configuration
+## Installation & Configuration
 
 ### Prérequis
 - Python 3.13+
@@ -90,18 +90,18 @@ python manage.py runserver
 
 L'API sera accessible sur : `http://127.0.0.1:8000/`
 
-## 📖 API Documentation
+## API Documentation
 
 ### Endpoints Principaux
 
-#### 🔐 Authentification
+#### Authentification
 | Endpoint | Méthode | Description |
 |----------|---------|-------------|
 | `/api/auth/register/` | POST | Inscription utilisateur |
 | `/api/auth/login/` | POST | Connexion JWT |
 | `/api/auth/change-password/` | POST | Changement mot de passe |
 
-#### 📅 Événements
+#### Événements
 | Endpoint | Méthode | Description |
 |----------|---------|-------------|
 | `/api/events/events/` | GET | Lister ses événements |
@@ -110,7 +110,7 @@ L'API sera accessible sur : `http://127.0.0.1:8000/`
 | `/api/events/events/{id}/` | PUT | Modifier un événement |
 | `/api/events/events/{id}/` | DELETE | Supprimer un événement |
 
-#### 🤝 Collaborations
+#### Collaborations
 | Endpoint | Méthode | Description |
 |----------|---------|-------------|
 | `/api/collaborations/send/` | POST | Envoyer demande collab |
@@ -119,7 +119,7 @@ L'API sera accessible sur : `http://127.0.0.1:8000/`
 | `/api/collaborations/requests/{id}/reject/` | POST | Refuser demande |
 | `/api/collaborations/collaborators/` | GET | Lister collaborateurs |
 
-#### 👥 Gestion Utilisateurs (Admin)
+#### Gestion Utilisateurs (Admin)
 | Endpoint | Méthode | Description |
 |----------|---------|-------------|
 | `/api/users/` | GET/POST | Lister/Créer utilisateurs |
@@ -127,13 +127,13 @@ L'API sera accessible sur : `http://127.0.0.1:8000/`
 | `/api/users/{id}/activate/` | POST | Activer utilisateur |
 | `/api/users/{id}/deactivate/` | POST | Désactiver utilisateur |
 
-### 📋 Documentation Interactive
+### Documentation Interactive
 
 Accédez à la documentation complète sur :
 - **Swagger UI** : `http://127.0.0.1:8000/api/schema/swagger-ui/`
 - **ReDoc** : `http://127.0.0.1:8000/api/schema/redoc/`
 
-## 💡 Exemples d'utilisation
+## Exemples d'utilisation
 
 ### 1. Inscription
 ```bash
@@ -178,7 +178,7 @@ curl -X GET http://127.0.0.1:8000/api/events/events/ \
   -H "Authorization: Bearer YOUR_ACCESS_TOKEN"
 ```
 
-## 🏗️ Structure du Projet
+## Structure du Projet
 
 ```
 calendar-backend/
@@ -215,7 +215,7 @@ calendar-backend/
 └── README.md                          # Cette documentation
 ```
 
-## 🔧 Commandes Utiles
+## Commandes Utiles
 
 ### Gestion des logs
 ```bash
@@ -253,15 +253,15 @@ python manage.py check
 python manage.py test
 ```
 
-## 🌍 Internationalisation
+## Internationalisation
 
 Le projet supporte plusieurs langues :
-- 🇫🇷 Français (par défaut)
-- 🇺🇸 Anglais
+- Français (par défaut)
+- Anglais
 
 Les messages d'erreur et l'interface sont automatiquement traduits selon la langue du navigateur.
 
-## 🔒 Sécurité
+## Sécurité
 
 ### Rate Limiting
 - **Connexion** : 5 tentatives/minute
@@ -278,7 +278,7 @@ Les messages d'erreur et l'interface sont automatiquement traduits selon la lang
 - **API** : Toutes les requêtes avec user/IP
 - **Erreurs** : Exceptions et erreurs 500
 
-## 🤝 Contribution
+## Contribution
 
 1. Fork le projet
 2. Créer une branche feature (`git checkout -b feature/AmazingFeature`)
@@ -292,11 +292,11 @@ Les messages d'erreur et l'interface sont automatiquement traduits selon la lang
 - Tests unitaires pour les nouvelles fonctionnalités
 - Mise à jour de la documentation
 
-## 📄 Licence
+## Licence
 
 Ce projet est sous licence MIT - voir le fichier [LICENSE](LICENSE) pour plus de détails.
 
-## 📞 Support
+## Support
 
 Pour toute question ou problème :
 - Ouvrir une issue sur GitHub
@@ -305,4 +305,4 @@ Pour toute question ou problème :
 
 ---
 
-**Développé avec ❤️ par l'équipe Calendar Backend**
+Développé par l'équipe Calendar Backend
